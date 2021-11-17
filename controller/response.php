@@ -1,17 +1,5 @@
 <?php
 
-/**
- * Notification response
- */
-class Notification
-{
-    // Properties
-    public $error;
-    public $status;
-    public $success;
-    public $result;
-}
-
 // New Appointment Record
 function new_appointment()
 {

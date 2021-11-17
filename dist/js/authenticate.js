@@ -1,6 +1,6 @@
 
 // Login Asychronous Request
-$('#sign-in-button').click(() => {
+$('#sign-in-button').on('click', () => {
     validateInput('validateLogin') // Form Validation
 
     //Signing In
@@ -13,7 +13,7 @@ $('#sign-in-button').click(() => {
 
 
 // Password Verification Asychronous Request 
-$('#VerifyAccount').click(() => {
+$('#VerifyAccount').on(click, () => {
     validateInput('validateAccount');
 
     //Sending asynchronous request
@@ -262,7 +262,7 @@ var Login = {
     },
     signIn: () => {
         $.ajax({
-            url: '../controller/config.php',
+            url: '../controller/authenticate.php',
             type: authenticate.type.POST,
             dataType: authenticate.JSON,
             beforeSend: () => {
