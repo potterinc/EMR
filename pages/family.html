@@ -1,0 +1,205 @@
+<!-- Main content -->
+<section class="content">
+
+    <!-- Default box -->
+    <div class="box">
+        <div class="box-header with-border">
+            <h3 class="box-title"><span id="patient-entity"></span> Family Registration</h3>
+
+            <div class="box-tools pull-right">
+                <button data-original-title="Collapse" type="button" class="btn btn-box-tool" data-widget="collapse"
+                    data-toggle="tooltip" title="">
+                    <i class="fa fa-minus"></i></button>
+                <button data-original-title="Remove" type="button" class="btn btn-box-tool" data-widget="remove"
+                    data-toggle="tooltip" title="">
+                    <i class="fa fa-times"></i></button>
+            </div>
+        </div>
+        <div class="box-body">
+            <form role="form">
+                <div class="box-body">
+                    <div class="form-group col-xs-12">
+                        <label for="patient-id">Patient ID</label>
+                        <input type="text" validatePatient class="form-control" id="patient-id" placeholder="Patient ID">
+                    </div>
+                    <div class="form-group col-xs-4">
+                        <label for="patient-first-name">First Name</label>
+                        <input type="text" validatePatient class="form-control" id="patient-first-name" placeholder="John">
+                    </div>
+                    <div class="form-group col-xs-4">
+                        <label for="patient-middle-name">Middle Name</label>
+                        <input type="text" validatePatient class="form-control" id="patient-middle-name" placeholder="Smith">
+                    </div>
+                    <div class="form-group col-xs-4">
+                        <label for="patient-last-name">Last Name</label>
+                        <input type="text" validatePatient class="form-control" id="patient-last-name" placeholder="Doe">
+                    </div>
+                    <div class="form-group col-xs-6">
+                        <label for="patient-telephone">Telphone</label>
+                        <input type="tel" class="form-control" id="patient-telephone" placeholder="08123456789">
+                    </div>
+                    <div class="form-group col-xs-6">
+                        <label for="patient-type">Patient Type:</label>
+                        <select type="email" id="patient-type" class="form-control" placeholder="">
+                            <option value="null" selected disabled>[Please Select]</option>
+                            <option value="Individual">Individual</option>
+                            <option value="AnteNatal">Antenatal Patient</option>
+                        </select>
+
+                    </div>
+                    <div class="form-group col-xs-12">
+                        <label for="patient-address">Address</label>
+                        <textarea class="form-control" rows="3" id="patient-address" placeholder="Address"></textarea>
+                    </div>
+                    <div class="form-group col-xs-12" id="entity-type">
+                        <label for="family-name">Family Name</label>
+                        <select class="form-control" id="family-name"></select>
+                    </div>
+                </div>
+                <!-- /.box-body -->
+            </form>
+            <div id="new-record-notification"></div>
+        </div>
+        <!-- /.box-body -->
+        <div class="box-footer">
+            <div class="box-footer">
+                <button id="save-patient-record" type="button" class="btn btn-primary">Save Record</button>
+            </div>
+        </div>
+        <!-- /.box-footer-->
+    </div>
+    <!-- /.box -->
+
+</section>
+<script>
+    $(document).ready(() => {
+
+        // Initializing
+        $('#save-patient-record').click(() => {
+            Authenticate.validateInput('validatePatient');
+
+            if (Authenticate.flag == true)
+                Patient.saveRecord();
+            else
+                return false;
+
+            Authenticate.flag = false;
+            return Authenticate.flag;
+        })
+
+        // Patient prototype
+        var Patient = {
+            firstName: $('#patient-first-name'),
+            lastName: $('#patient-last-name'),
+            middleName: $('#patient-middle-name'),
+            id: $('#patient-id'),
+            telephone: $('#patient-telephone'),
+            type: $('#patient-type'),
+            address: $('#patient-address'),
+            family: $('#family-name'),
+            saveRecord: () => {
+                $.ajax({
+                    url: 'controller/patient_record.php',
+                    type: Authenticate.type.POST,
+                    dataype: Authenticate.JSON,
+                    data: {
+                        patientFirstName: Patient.firstName.val(),
+                        patientLastName: Patient.lastName.val(),
+                        patientMiddleName: Patient.middleName.val(),
+                        patientId: Patient.id.val(),
+                        patientTelephone: Patient.telephone.val(),
+                        patientType: Patient.type.val(),
+                        patientAddress: Patient.address.val(),
+                        dateOfRegistration: Authenticate.getToday(),
+                        patientCategory: "Family",
+                        familyName: Patient.family.val()
+                    },
+                    beforeSend: () => $('#save-patient-record').html('Saving...'),
+                    success: (asyncRequest) => {
+                        var requestData = JSON.parse(asyncRequest);
+                        ServerResponse.success = requestData.success
+                        ServerResponse.error = requestData.error
+                        ServerResponse.status = requestData.status
+                    },
+                    complete: () => {
+                        $('#save-patient-record').html('Save Record');
+                        Patient.firstName.val(null);
+                        Patient.lastName.val(null);
+                        Patient.middleName.val(null);
+                        Patient.id.val(null);
+                        Patient.telephone.val(null);
+                        Patient.type.val(null);
+                        Patient.address.val(null);
+                        Patient.listFamily();
+
+                        if (ServerResponse.status == true)
+                            $('#new-record-notification').html(ServerResponse.success).addClass('alert alert-success')
+                        else
+                            $('#new-record-notification').html(ServerResponse.error).addClass('alert alert-warning')
+
+                        setTimeout(() => {
+                            $('#new-record-notification').fadeOut(1000);
+                            $('#new-record-notification').val(null).show();
+                        }, 5000)
+
+                    }
+                })
+            },
+            listFamily: (family) => {
+                $.ajax({
+                    url: 'controller/patient_record.php',
+                    type: Authenticate.type.POST,
+                    dataType: Authenticate.JSON,
+                    data: {entityData: family},
+                    success:(asyncRequest)=>{
+                        ServerResponse.entityListings = asyncRequest.entityList
+                    },
+                    complete: ()=>{
+                        $('#family-name').html(ServerResponse.entityListings);
+                    }
+                })
+            }
+        }
+        // Authentication Handle
+        var Authenticate = {
+            flag: false,
+            JSON: 'json',
+            type: { POST: 'POST', GET: 'GET' },
+            validateInput: (inputArgs) => {
+                var validInput = $('[' + inputArgs + ']');
+                for (var formInput = 0; formInput < validInput.length; formInput++) {
+                    if (validInput.get(formInput).value == null || validInput.get(formInput).value == '') {
+                        validInput[formInput].placeholder = 'This field is required';
+                        return false;
+                    }
+                }
+                Authenticate.flag = true;
+            },
+            getToday: () => {
+                // const monthNames = ["January", "February", "March", "April", "May", "June",
+                //     "July", "August", "September", "October", "November", "December"];
+                var dateObj = new Date(),
+                    m = (dateObj.getMonth() + 1).toString(),
+                    month = (m.length == 1) ? '0' + m : m,
+
+                    d = dateObj.getDate().toString(),
+                    day = (d.length == 1) ? '0' + d : d,
+
+                    year = dateObj.getFullYear();
+                return year + "-" + month + "-" + day;
+            }
+        }
+
+        // Respose Handler
+        var ServerResponse = {
+            success: "",
+            error: "",
+            status: "",
+            entityListings: ""
+        }
+        
+
+        Patient.listFamily("Family");
+    })
+
+</script>

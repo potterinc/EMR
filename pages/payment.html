@@ -1,0 +1,199 @@
+<!-- Main content -->
+<section class="content">
+
+    <!-- Default box -->
+    <div class="box">
+        <div class="box-header with-border">
+            <h3 class="box-title"> Make a Payment</h3>
+
+            <div class="box-tools pull-right">
+                <button data-original-title="Collapse" type="button" class="btn btn-box-tool" data-widget="collapse"
+                    data-toggle="tooltip" title="">
+                    <i class="fa fa-minus"></i></button>
+                <button data-original-title="Remove" type="button" class="btn btn-box-tool" data-widget="remove"
+                    data-toggle="tooltip" title="">
+                    <i class="fa fa-times"></i></button>
+                <!-- <h4><span>Balance: &#8358; </span><label id="patient-balance" class="text-red">0<span>.00</span></label> | 
+               <span>Service Cost: &#8358; </span><label id="patient-balance" class="text-green">0<span>.00</span></label></h4> -->
+            </div>
+        </div>
+        <div class="box-body">
+            <form role="form">
+                <div class="box-body">
+                    <div class="form-group col-xs-12">
+                        <label for="patient-id">Patient ID</label>
+                        <select class="form-control" id="patient-id">
+
+                        </select>
+                    </div>
+                    <div class="form-group col-xs-4">
+                        <label for="services">Service</label>
+                        <select id="services" class="form-control select2" style="width: 100%;">
+                            <option value="null" selected disabled>[Please Select]</option>
+                            <option value="Investigation">Investigation</option>
+                            <option value="Investigation | Registration">Investigation | Registration</option>
+                            <option value="Consultation">Consultation</option>
+                            <option value="Medical Bill">Medical Bill</option>
+                            <option value="Registration">Registration</option>
+                            <option value="Debt">Debt</option>
+                            <option value="Family Registration">Family Registration</option>
+                        </select>
+                    </div>
+                    <div class="form-group col-xs-4">
+                        <label for="amount-paid">Amount Paid</label>
+                        <input type="number" class="form-control" id="amount-paid" value="0">
+                    </div>
+                    <div class="form-group col-xs-4">
+                        <label>Payment Method</label>
+                        <select id="payment-method" class="form-control select2" style="width: 100%;">
+                            <option value="null" selected disabled>[Please Select]</option>
+                            <option value="Bank Transfer">Bank Transfer</option>
+                            <option value="POS">POS</option>
+                            <option value="Cash">Cash</option>
+                        </select>
+                    </div>
+                    <div class="form-group col-xs-12">
+                        <label for="payment-description">Further Desscription</label>
+                        <textarea class="form-control" rows="3" id="payment-description" validatePayment
+                            placeholder=""></textarea>
+                    </div>
+                </div>
+                <!-- /.box-body -->
+
+            </form>
+            <div id="new-record-notification"></div>
+        </div>
+        <!-- /.box-body -->
+        <div class="box-footer">
+            <div class="box-footer">
+                <button type="button" class="btn btn-primary" id="make-payment">Make Payment</button>
+            </div>
+        </div>
+        <!-- /.box-footer-->
+    </div>
+    <!-- /.box -->
+
+</section>
+<script>
+    $(document).ready(() => {
+
+        // Initializing
+        $('#make-payment').click(() => {
+            Authenticate.validateInput('validatePayment');
+
+            if (Authenticate.flag == true)
+                Payment.saveRecord();
+            else
+                return false;
+
+            Authenticate.flag = false;
+            return Authenticate.flag;
+        })
+
+        // Payment prototype
+        var Payment = {
+            id: $('#patient-id'),
+            detials: $('#payment-description'),
+            amountPaid: $('#amount-paid'),
+            paymentMethod: $('#payment-method'),
+            service: $('#services'),
+            saveRecord: () => {
+                $.ajax({
+                    url: 'controller/payment.php',
+                    type: Authenticate.type.POST,
+                    dataype: Authenticate.JSON,
+                    data: {
+                        patientId: Payment.id.val(),
+                        details: Payment.detials.val(),
+                        amount: Payment.amountPaid.val(),
+                        service: Payment.service.val(),
+                        paymentMethod: Payment.paymentMethod.val(),
+                        transactionDate: Authenticate.getToday(),
+                    },
+                    beforeSend: () => $('#make-payment').html('Processing...'),
+                    success: (asyncRequest) => {
+                        var requestData = JSON.parse(asyncRequest);
+                        ServerResponse.success = requestData.success
+                        ServerResponse.error = requestData.error
+                        ServerResponse.status = requestData.status
+                    },
+                    complete: () => {
+                        $('#make-payment').html('Make Payment');
+                        Payment.id.val(null);
+                        Payment.detials.val(null);
+                        Payment.paymentMethod.val(null);
+                        Payment.amountPaid.val(null);
+                        Payment.service.val(null);
+                        if (ServerResponse.status == true)
+                            $('#new-record-notification').html(ServerResponse.success).addClass('alert alert-success')
+                        else
+                            $('#new-record-notification').html(ServerResponse.error).addClass('alert alert-warning')
+
+                        setTimeout(() => {
+                            $('#new-record-notification').fadeOut(1000);
+                            $('#new-record-notification').val(null).show();
+                        }, 5000)
+
+                    }
+                })
+            },
+
+            listPatients: () => {
+                $.ajax({
+                    url: 'controller/appointment.php',
+                    type: Authenticate.type.POST,
+                    dataType: Authenticate.JSON,
+                    data: { patient: true },
+                    success: (asyncRequest) => {
+                        ServerResponse.patientList = asyncRequest.patients
+                    },
+                    complete: () => {
+                        $('#patient-id').html(ServerResponse.patientList);
+                    }
+                })
+            }
+        }
+
+        // Authentication Handle
+        var Authenticate = {
+            flag: false,
+            JSON: 'json',
+            type: { POST: 'POST', GET: 'GET' },
+            validateInput: (inputArgs) => {
+                var validInput = $('[' + inputArgs + ']');
+                for (var formInput = 0; formInput < validInput.length; formInput++) {
+                    if (validInput.get(formInput).value == null || validInput.get(formInput).value == '') {
+                        validInput[formInput].placeholder = 'This field is required';
+                        return false;
+                    }
+                }
+                Authenticate.flag = true;
+            },
+            getToday: () => {
+                // const monthNames = ["January", "February", "March", "April", "May", "June",
+                //     "July", "August", "September", "October", "November", "December"];
+                var dateObj = new Date(),
+                    m = (dateObj.getMonth() + 1).toString(),
+                    month = (m.length == 1) ? '0' + m : m,
+
+                    d = dateObj.getDate().toString(),
+                    day = (d.length == 1) ? '0' + d : d,
+
+                    year = dateObj.getFullYear();
+                return year + "-" + month + "-" + day;
+            }
+        }
+
+
+        // Respose Handler
+        var ServerResponse = {
+            success: "",
+            error: "",
+            status: "",
+            patientList: "",
+        }
+
+        Payment.listPatients();
+
+    });
+</script>

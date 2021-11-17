@@ -1,0 +1,297 @@
+<!-- Main content -->
+<section class="content">
+
+    <!-- Default box -->
+    <div class="box">
+        <div class="box-header with-border">
+            <h3 class="box-title"><span></span> New Appointment</h3>
+
+            <div class="box-tools pull-right">
+                <button data-original-title="Collapse" type="button" class="btn btn-box-tool" data-widget="collapse"
+                    data-toggle="tooltip" title="">
+                    <i class="fa fa-minus"></i></button>
+                <button data-original-title="Remove" type="button" class="btn btn-box-tool" data-widget="remove"
+                    data-toggle="tooltip" title="">
+                    <i class="fa fa-times"></i></button>
+            </div>
+        </div>
+        <div class="box-body">
+            <form role="form">
+                <div class="box-body">
+
+                    <div class="form-group col-xs-12">
+                        <label for="patient-id">Patient ID</label>
+                        <input type="text" validateAppointment list="patient-list" class="form-control" id="patient-id"
+                            placeholder="Patient ID">
+                    </div>
+
+                    <div class="form-group col-md-4">
+                        <label for="first-name">First Name</label>
+                        <input type="text" validateAppointment class="form-control" id="first-name" placeholder="John">
+                    </div>
+                    <div class="form-group col-md-4">
+                        <label for="middle-name">Middle Name</label>
+                        <input type="text" validateAppointment class="form-control" id="middle-name"
+                            placeholder="Smith">
+                    </div>
+                    <div class="form-group col-md-4">
+                        <label for="last-name">Last Name</label>
+                        <input type="text" validateAppointment class="form-control" id="last-name" placeholder="Doe">
+                    </div>
+                    <div class="form-group col-md-4">
+                        <label for="telephone">Telphone</label>
+                        <input type="tel" validateAppointment class="form-control" id="telephone"
+                            placeholder="08123456789">
+                    </div>
+                    <div class="form-group col-md-4">
+                        <label for="purpose">Purpose</label>
+                        <input type="text" validateAppointment id="purpose" class="form-control" placeholder="">
+                    </div>
+                    <div class="bootstrap-timepicker col-md-4">
+                        <div class="form-group">
+                            <label>Date and Time</label>
+                            <input id="appointment-time" type="time" class="form-control timepicker">
+                            <!-- /.input group -->
+                        </div>
+                    </div>
+
+                    <div class="form-group col-xs-12">
+                        <input id="add-drug-prescription" type="button" class="btn btn-primary" value="Prescribe Drugs">
+                    </div>
+                    <div class="form-group" id="drug-prescription" hidden>
+
+                        <div class="form-group col-md-3">
+                            <label for="drug">Drug</label>
+                            <select type="text" id="drug" class="form-control">
+                                <option selected disabled>[Select Drug]</option>
+                                <option value="OPD Injection">OPD Injection</option>
+                            </select>
+                        </div>
+                        <div class="form-group col-md-3">
+                            <label for="treatment-dosage">Dosage</label>
+                            <input type="number" id="treatment-dosage" value="0" class="form-control">
+                        </div>
+                        <div class="form-group col-md-3">
+                            <label>Frequency</label>
+                            <select id="treatment-frequency" class="form-control select2" style="width: 100%;">
+                                <option selected disabled>[Please Select]</option>
+                                <option value="OD">OD</option>
+                                <option value="BD">BD</option>
+                                <option value="TDS">TDS</option>
+                                <option value="QDS">QDS</option>
+                                <option value="OM">OM</option>
+                                <option value="ON">ON</option>
+                                <option value="CC">CC</option>
+                                <option value="PC">PC</option>
+                                <option value="AC">AC</option>
+                                <option value="PRN">PRN</option>
+                                <option value="MDU">MDU</option>
+                                <option value="4H">4H</option>
+                                <option value="2P">2P</option>
+                                <option value="MN">MN</option>
+                                <option value="PO">PO</option>
+                                <option value="PR">PR</option>
+                                <option value="PV">PV</option>
+                                <option value="BNO">BNO</option>
+                                <option value="BEY">BEY</option>
+                                <option value="LE">LE</option>
+                            </select>
+                        </div>
+                        <div class="form-group col-md-3">
+                            <label for="duration">Duration (Days)</label>
+                            <input type="number" id="duration" value="0" class="form-control">
+                        </div>
+
+                    </div>
+
+                    <div class="form-group col-xs-12">
+                        <label for="appointment-details">Further Details</label>
+                        <textarea class="form-control" rows="3" validateAppointment id="appointment-details"
+                            placeholder="More Information"></textarea>
+                    </div>
+
+                </div>
+                <!-- /.box-body -->
+
+            </form>
+            <div id="new-record-notification"></div>
+        </div>
+        <!-- /.box-body -->
+        <div class="box-footer">
+            <div class="box-footer">
+                <button type="button" id="save-record" class="btn btn-primary">Save Record</button>
+            </div>
+        </div>
+        <!-- /.box-footer-->
+    </div>
+    <!-- /.box -->
+
+    <datalist id="patient-list"></datalist>
+</section>
+
+<script>
+    $('#add-drug-prescription').click(() => $('#drug-prescription').show(500));
+
+
+    $(document).ready(() => {
+
+        // Initializing
+        $('#save-record').click(() => {
+            Authenticate.validateInput('validateAppointment');
+
+            if (Authenticate.flag == true)
+                Appointment.saveRecord();
+            else
+                return false;
+
+            Authenticate.flag = false;
+            return Authenticate.flag;
+        })
+
+        // Appointment prototype
+        var Appointment = {
+            firstName: $('#first-name'),
+            lastName: $('#last-name'),
+            middleName: $('#middle-name'),
+            id: $('#patient-id'),
+            telephone: $('#telephone'),
+            purpose: $('#purpose'),
+            time: $('#appointment-time'),
+            drug: $('#drug'),
+            dosage: $('#treatment-dosage'),
+            frequency: $('#treatment-frequency'),
+            detials: $('#appointment-details'),
+            duration: $('#duration'),
+            saveRecord: () => {
+                $.ajax({
+                    url: 'controller/appointment.php',
+                    type: Authenticate.type.POST,
+                    dataype: Authenticate.JSON,
+                    data: {
+                        patientFirstName: Appointment.firstName.val(),
+                        patientLastName: Appointment.lastName.val(),
+                        patientMiddleName: Appointment.middleName.val(),
+                        patientId: Appointment.id.val(),
+                        purpose: Appointment.purpose.val(),
+                        patientTelephone: Appointment.telephone.val(),
+                        appointmentDate: Authenticate.getToday(),
+                        appointmentTime: Appointment.time.val(),
+                        prescribedDrug: Appointment.drug.val(),
+                        prescriptionDosage: Appointment.dosage.val(),
+                        prescriptionFrequency: Appointment.frequency.val(),
+                        prescriptionDuration: Appointment.duration.val(),
+                        detials: Appointment.detials.val()
+
+                    },
+                    beforeSend: () => $('#save-record').html('Saving...'),
+                    success: (asyncRequest) => {
+                        var requestData = JSON.parse(asyncRequest);
+                        ServerResponse.success = requestData.success
+                        ServerResponse.error = requestData.error
+                        ServerResponse.status = requestData.status
+                    },
+                    complete: () => {
+                        $('#save-record').html('Save Record');
+                        Appointment.firstName.val(null);
+                        Appointment.lastName.val(null);
+                        Appointment.middleName.val(null);
+                        Appointment.id.val(null);
+                        Appointment.telephone.val(null);
+                        Appointment.listDrugs();
+                        Appointment.listPatients();
+                        Appointment.time.val(null);
+                        Appointment.drug.val(null);
+                        Appointment.dosage.val(0);
+                        Appointment.frequency.val(null);
+                        Appointment.duration.val(0);
+                        Appointment.purpose.val(null);
+                        Appointment.detials.val(null);
+
+                        if (ServerResponse.status == true)
+                            $('#new-record-notification').html(ServerResponse.success).addClass('alert alert-success')
+                        else
+                            $('#new-record-notification').html(ServerResponse.error).addClass('alert alert-warning')
+
+                        setTimeout(() => {
+                            $('#new-record-notification').fadeOut(1000);
+                            $('#new-record-notification').val(null).show();
+                        }, 5000)
+
+                    }
+                })
+            },
+            listDrugs: () => {
+                $.ajax({
+                    url: 'controller/appointment.php',
+                    type: Authenticate.type.POST,
+                    dataType: Authenticate.JSON,
+                    data: { drugs: true },
+                    success: (asyncRequest) => {
+                        ServerResponse.drugList = asyncRequest.drugList;
+                    },
+                    complete: () => {
+                        $('#drug-list').html(ServerResponse.drugList);
+                    }
+                })
+            },
+
+            listPatients: () => {
+                $.ajax({
+                    url: 'controller/appointment.php',
+                    type: Authenticate.type.POST,
+                    dataType: Authenticate.JSON,
+                    data: { patient: true },
+                    success: (asyncRequest) => {
+                        ServerResponse.patientList = asyncRequest.patients
+                    },
+                    complete: () => {
+                        $('#patient-list').html(ServerResponse.patientList);
+                    }
+                })
+            }
+        }
+
+        // Authentication Handle
+        var Authenticate = {
+            flag: false,
+            JSON: 'json',
+            type: { POST: 'POST', GET: 'GET' },
+            validateInput: (inputArgs) => {
+                var validInput = $('[' + inputArgs + ']');
+                for (var formInput = 0; formInput < validInput.length; formInput++) {
+                    if (validInput.get(formInput).value == null || validInput.get(formInput).value == '') {
+                        validInput[formInput].placeholder = 'This field is required';
+                        return false;
+                    }
+                }
+                Authenticate.flag = true;
+            },
+            getToday: () => {
+                // const monthNames = ["January", "February", "March", "April", "May", "June",
+                //     "July", "August", "September", "October", "November", "December"];
+                var dateObj = new Date(),
+                    m = (dateObj.getMonth() + 1).toString(),
+                    month = (m.length == 1) ? '0' + m : m,
+
+                    d = dateObj.getDate().toString(),
+                    day = (d.length == 1) ? '0' + d : d,
+
+                    year = dateObj.getFullYear();
+                return year + "-" + month + "-" + day;
+            }
+        }
+
+
+        // Respose Handler
+        var ServerResponse = {
+            success: "",
+            error: "",
+            status: "",
+            patientList: "",
+            drugList: ""
+        }
+
+        Appointment.listPatients();
+
+    });
+</script>

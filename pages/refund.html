@@ -1,0 +1,63 @@
+
+    <!-- Main content -->
+    <section class="content">
+
+        <!-- Default box -->
+        <div class="box">
+            <div class="box-header with-border">
+                <h3 class="box-title"><span id="patient-entity"></span> Make a Refund</h3>
+
+                <div class="box-tools pull-right">
+                    <button data-original-title="Collapse" type="button" class="btn btn-box-tool" data-widget="collapse"
+                        data-toggle="tooltip" title="">
+                        <i class="fa fa-minus"></i></button>
+                    <button data-original-title="Remove" type="button" class="btn btn-box-tool" data-widget="remove"
+                        data-toggle="tooltip" title="">
+                        <i class="fa fa-times"></i></button>
+                </div>
+            </div>
+            <div class="box-body">
+                <form role="form">
+                    <div class="box-body">
+                        <div class="form-group col-xs-12">
+                            <label for="patient-id">Patient ID</label>
+                            <input type="text" class="form-control" id="patient-id" placeholder="Patient ID">
+                        </div>
+                        <div class="form-group col-xs-6">
+                            <label for="services">Service</label>
+                            <select id="services" class="form-control" style="width: 100%;">
+                                <option value="null" selected disabled>[Please Select]</option>
+                                <option value="Investigation" selected="">Investigation</option>
+                                <option value="Investigation | Registration">Investigation | Registration</option>
+                                <option value="Consultation">Consultation</option>
+                                <option value="Medical Bill">Medical Bill</option>
+                                <option value="Registration">Registration</option>
+                                <option value="Family Registration">Family Registration</option>
+                            </select>
+                        </div>
+                        <div class="form-group col-xs-6">
+                            <label for="amount-paid">Amount Paid</label>
+                            <input type="number" class="form-control" id="amount-paid" placeholder="">
+                        </div>
+                        <div class="form-group col-xs-12">
+                            <label for="payment-description">Reason for Refund</label>
+                            <textarea class="form-control" rows="3" id="payment-description"
+                                placeholder=""></textarea>
+                        </div>
+                    </div>
+                    <!-- /.box-body -->
+
+                </form>
+            </div>
+            <!-- /.box-body -->
+            <div class="box-footer">
+                <div class="box-footer">
+                    <button type="button" class="btn btn-primary" id="make-payment">Make Refund</button>
+                </div>
+            </div>
+            <!-- /.box-footer-->
+        </div>
+        <!-- /.box -->
+
+    </section>
+    <!-- /.content -->

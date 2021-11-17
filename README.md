@@ -1,1 +1,2 @@
-# Emergency Medical Recorder (EMR)
+# EMR
+Emergency Medical Recorder 

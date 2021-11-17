@@ -1,0 +1,152 @@
+<!-- Main content -->
+<section class="content">
+
+    <!-- Default box -->
+    <div class="box">
+        <div class="box-header with-border">
+            <h3 class="box-title"><span id="patient-entity"></span> New Corporate Profile</h3>
+            <div class="box-tools pull-right">
+                <button data-original-title="Collapse" type="button" class="btn btn-box-tool" data-widget="collapse"
+                    data-toggle="tooltip" title="">
+                    <i class="fa fa-minus"></i></button>
+                <button data-original-title="Remove" type="button" class="btn btn-box-tool" data-widget="remove"
+                    data-toggle="tooltip" title="">
+                    <i class="fa fa-times"></i></button>
+            </div>
+        </div>
+        <div class="box-body">
+            <form role="form">
+                <div class="box-body">
+                    <div class="form-group col-xs-6">
+                        <label for="company-name">Organization Name</label>
+                        <input type="text" class="form-control" validateField id="company-name" placeholder="Company Name">
+                    </div>
+                    <div class="form-group col-xs-6">
+                        <label for="company-telephone">Contact Telephone</label>
+                        <input type="text" class="form-control" validateField id="company-telephone" placeholder="08123456789">
+                    </div>
+                    <div class="form-group col-xs-12">
+                        <label for="company-address">Address</label>
+                        <textarea class="form-control" rows="3" id="company-address"
+                            placeholder="Corporate Address" validateField></textarea>
+                    </div>
+
+                </div>
+                <!-- /.box-body -->
+
+            </form>
+            <div id="new-record-notification"></div>
+        </div>
+        <!-- /.box-body -->
+        <div class="box-footer">
+            <div class="box-footer">
+                <button type="button" id="save-record" class="btn btn-primary">Save Record</button>
+            </div>
+        </div>
+        <!-- /.box-footer-->
+    </div>
+    <!-- /.box -->
+
+</section>
+
+<script>
+    $(document).ready(() => {
+
+        // Initializing
+        $('#save-record').click(() => {
+            Authenticate.validateInput('validateField');
+
+            if (Authenticate.flag == true)
+                Company.saveRecord();
+            else
+                return false;
+
+            Authenticate.flag = false;
+            return Authenticate.flag;
+        })
+
+        // Appointment prototype
+        var Company = {
+            companyName: $('#company-name'),
+            companyAddress: $('#company-address'),
+            companyTelephone: $('#company-telephone'),
+            saveRecord: () => {
+                $.ajax({
+                    url: 'controller/entity.php',
+                    type: Authenticate.type.POST,
+                    dataype: Authenticate.JSON,
+                    data: {
+                        companyAddress: Company.companyAddress.val(),
+                        companyName: Company.companyName.val(),
+                        companyTelephone: Company.companyTelephone.val(),
+                        entityType: 'Corporate'
+                    },
+                    beforeSend: () => $('#save-record').html('Saving...'),
+                    success: (asyncRequest) => {
+                        var requestData = JSON.parse(asyncRequest);
+                        ServerResponse.success = requestData.success
+                        ServerResponse.error = requestData.error
+                        ServerResponse.status = requestData.status
+                    },
+                    complete: () => {
+                        $('#save-record').html('Save Record');
+                        Company.companyAddress.val(null);
+                        Company.companyName.val(null);
+                        Company.companyTelephone.val(null);
+
+                        if (ServerResponse.status == true)
+                            $('#new-record-notification').html(ServerResponse.success).addClass('alert alert-success')
+                        else
+                            $('#new-record-notification').html(ServerResponse.error).addClass('alert alert-warning')
+
+                        setTimeout(() => {
+                            $('#new-record-notification').fadeOut(1000);
+                            $('#new-record-notification').val(null).show();
+                        }, 5000)
+                    }
+                })
+            }
+        }
+
+        // Authentication Handle
+        var Authenticate = {
+            flag: false,
+            JSON: 'json',
+            type: { POST: 'POST', GET: 'GET' },
+            validateInput: (inputArgs) => {
+                var validInput = $('[' + inputArgs + ']');
+                for (var formInput = 0; formInput < validInput.length; formInput++) {
+                    if (validInput.get(formInput).value == null || validInput.get(formInput).value == '') {
+                        validInput[formInput].placeholder = 'This field is required';
+                        return false;
+                    }
+                }
+                Authenticate.flag = true;
+            },
+            getToday: () => {
+                // const monthNames = ["January", "February", "March", "April", "May", "June",
+                //     "July", "August", "September", "October", "November", "December"];
+                var dateObj = new Date(),
+                    m = (dateObj.getMonth() + 1).toString(),
+                    month = (m.length == 1) ? '0' + m : m,
+
+                    d = dateObj.getDate().toString(),
+                    day = (d.length == 1) ? '0' + d : d,
+
+                    year = dateObj.getFullYear();
+                return year + "-" + month + "-" + day;
+            }
+        }
+
+
+        // Respose Handler
+        var ServerResponse = {
+            success: "",
+            error: "",
+            status: "",
+            patientList: "",
+            drugList: ""
+        }
+
+    })
+</script>
