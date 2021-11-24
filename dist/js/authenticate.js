@@ -4,40 +4,40 @@ $('#sign-in-button').on('click', () => {
     validateInput('validateLogin') // Form Validation
 
     //Signing In
-    if (authenticate.flag == true) {
+    if (Authenticate.flag == true) {
         Login.signIn();
-        authenticate.flag = false;
-        return authenticate.flag;
+        Authenticate.flag = false;
+        return Authenticate.flag;
     }
 });
 
 
 // Password Verification Asychronous Request 
-$('#VerifyAccount').on(click, () => {
+$('#VerifyAccount').on('click', () => {
     validateInput('validateAccount');
 
     //Sending asynchronous request
-    if (authenticate.flag == true) {
+    if (Authenticate.flag == true) {
         $.ajax({
             url: 'https://filmplace.potterincorporated.com/config/auth.php',
-            dataType: authenticate.JSON,
-            type: authenticate.type.POST,
+            dataType: Authenticate.JSON,
+            type: Authenticate.type.POST,
             beforeSend: () => {
                 $('#VerifyAccount').html('<img src="./images/preloader/fading_circles.gif" width="32" />')
             },
             data: {
-                verifiedEmail: authenticate.Email.val(),
-                answer: authenticate.Answer.val(),
-                securityQuestion: authenticate.Question.val()
+                verifiedEmail: Authenticate.Email.val(),
+                answer: Authenticate.Answer.val(),
+                securityQuestion: Authenticate.Question.val()
             },
             success: (asyncRequest) => {
-                authenticate.Email.val(null);
-                authenticate.Answer.val(null);
-                authenticate.Question.val('null');
+                Authenticate.Email.val(null);
+                Authenticate.Answer.val(null);
+                Authenticate.Question.val('null');
                 $('#VerifyAccount').html('Verify');
                 if (asyncRequest.Status === true) {
-                    $('#small-dialog2').html(authenticate.ChangePassword);
-                    authenticate.verifiedUserId.val(asyncRequest.userId);
+                    $('#small-dialog2').html(Authenticate.ChangePassword);
+                    Authenticate.verifiedUserId.val(asyncRequest.userId);
                 }
                 else {
                     $('#AccountVerificationStatus').html(asyncRequest.Message);
@@ -48,8 +48,8 @@ $('#VerifyAccount').on(click, () => {
                 }
             }
         })
-        authenticate.flag = false;
-        return authenticate.flag;
+        Authenticate.flag = false;
+        return Authenticate.flag;
     }
 });
 
@@ -59,25 +59,25 @@ $('#PasswordReset').click(() => {
     validateInput('validatePassword');
 
     //Sending asynchronous request
-    if (authenticate.flag == true) {
+    if (Authenticate.flag == true) {
 
-        if (authenticate.confirmNewPassword.val() === authenticate.Password.val()) {
+        if (Authenticate.confirmNewPassword.val() === Authenticate.Password.val()) {
 
             setTimeout(() => {
                 $.ajax({
                     url: 'https://filmplace.potterincorporated.com/config/auth.php',
-                    dataType: authenticate.JSON,
-                    type: authenticate.type.POST,
+                    dataType: Authenticate.JSON,
+                    type: Authenticate.type.POST,
                     data: {
-                        password: authenticate.Password.val(),
-                        userId: authenticate.verifiedUserId.val()
+                        password: Authenticate.Password.val(),
+                        userId: Authenticate.verifiedUserId.val()
                     },
                     beforeSend: () => {
                         $('#PasswordReset').html('<img src="./images/preloader/fading_circles.gif" width="32" />');
                     },
                     success: (asyncRequest) => {
-                        authenticate.Password.val(null);
-                        authenticate.confirmNewPassword.val(null);
+                        Authenticate.Password.val(null);
+                        Authenticate.confirmNewPassword.val(null);
                         $('#PasswordReset').html('Reset Password');
                         if (asyncRequest.Status == true) {
                             $('#PasswordResetStatus').html(asyncRequest.Message);
@@ -91,20 +91,20 @@ $('#PasswordReset').click(() => {
                     }
                 })
             }, 3000)
-            authenticate.flag = false;
-            return authenticate.flag;
+            Authenticate.flag = false;
+            return Authenticate.flag;
         }
         else {
             $('#PasswordResetStatus').html('<span class="w3-animate-top w3-amber w3-btn-block w3-padding-8 w3-center">Password Does not match<br>Try Again.</span>')
-            authenticate.Password.val(null);
-            authenticate.confirmNewPassword.val(null);
+            Authenticate.Password.val(null);
+            Authenticate.confirmNewPassword.val(null);
             $('#PasswordReset').html('Reset Password');
             setTimeout(() => {
                 $('#PasswordResetStatus').fadeOut(1000);
                 $('#PasswordResetStatus').val(null).show()
             }, 5000)
-            authenticate.flag = false;
-            return authenticate.flag;
+            Authenticate.flag = false;
+            return Authenticate.flag;
         }
     }
 
@@ -114,11 +114,11 @@ $('#PasswordReset').click(() => {
 $('#SignUp').click(() => {
     validateInput('validateUser');
     //Sending asynchronous request
-    if (authenticate.flag == true) {
+    if (Authenticate.flag == true) {
         $.ajax({
             url: 'https://filmplace.potterincorporated.com/config/auth.php',
-            type: authenticate.type.POST,
-            dataType: authenticate.JSON,
+            type: Authenticate.type.POST,
+            dataType: Authenticate.JSON,
             data: {
                 fullName: SignUp.fullName.val(),
                 newUserEmail: SignUp.Email.val(),
@@ -148,8 +148,8 @@ $('#SignUp').click(() => {
                 }, 5000)
             }
         })
-        authenticate.flag = false;
-        return authenticate.flag;
+        Authenticate.flag = false;
+        return Authenticate.flag;
     }
 })
 
@@ -160,16 +160,16 @@ $('#SignUp').click(() => {
 // $('#UploadPicture').click(() => {
 //     validateInput('validateUpload');
 
-//     if (authenticate.flag == true) {
+//     if (Authenticate.flag == true) {
 //         let formData = new FormData(form);
 //         $.ajax({
 //             url: 'https://filmplace.potterincorporated.com/config/upload.php',
-//             type: authenticate.type.POST,
-//             // dataType: authenticate.JSON,
+//             type: Authenticate.type.POST,
+//             // dataType: Authenticate.JSON,
 //             contentType: false,
 //             cache: false,
 //             processData: false,
-//             dataType: authenticate.JSON,
+//             dataType: Authenticate.JSON,
 //             data: formData,
 //             beforeSend: () => {
 //                 $('#UploadPicture').html('<img src="./images/preloader/upload.gif" width="32" />');
@@ -194,7 +194,7 @@ $('#SignUp').click(() => {
 //             }
 //         });
 //     }
-//     authenticate.flag = false;
+//     Authenticate.flag = false;
 // })
 
 // Search algorithm
@@ -202,7 +202,7 @@ $('#SignUp').click(() => {
 $('#Search').click(() => {
     validateInput('validateKeyword');
 
-    if (authenticate.flag == true)
+    if (Authenticate.flag == true)
         Search.match();
     else
         return false;
@@ -216,9 +216,9 @@ $('#logout').click(() => {
 
 // $('#advanceSearch').click(function () {
 //     validateInput('validateAdvance');
-//     if (authenticate.flag == true) {
+//     if (Authenticate.flag == true) {
 //         Search.advance();
-//         authenticate.flag = false;
+//         Authenticate.flag = false;
 //     }
 
 // })
@@ -236,11 +236,11 @@ function validateInput(inputArgs) {
             return false;
         }
     }
-    authenticate.flag = true;
+    Authenticate.flag = true;
 }
 
 var Login = {
-    Email: $('#login-email'),
+    Username: $('#login-username'),
     Password: $('#login-password'),
     loginSession: () => {
         if (localStorage.getItem('status') === 'true') {
@@ -262,39 +262,44 @@ var Login = {
     },
     signIn: () => {
         $.ajax({
-            url: '../controller/authenticate.php',
-            type: authenticate.type.POST,
-            dataType: authenticate.JSON,
+            url: 'controller/authenticate.php',
+            type: Authenticate.type.POST,
+            dataType: Authenticate.JSON,
             beforeSend: () => {
                 $('#sign-in-button').html('<label></label>')
                 $('#sign-in-button label').addClass('loader')
             },
             data: {
-                loginEmail: Login.Email.val(),
-                loginPassword: Login.Password.val(),
+                username: Login.Username.val(),
+                password: Login.Password.val(),
             },
             success: (asyncRequest) => {
-                Login.Email.val(null);
-                Login.Password.val(null);
-                if (asyncRequest.Status === true) {
-                    localStorage.setItem('name', asyncRequest.fullName);
-                    localStorage.setItem('status', asyncRequest.Status);
-                    localStorage.setItem('id', asyncRequest.userId);
-                    localStorage.setItem('telephone', asyncRequest.telephone);
-                    location.href = './main.html';
-                }
-                else
-                    $('#loginStatus').html(asyncRequest.Message);
-                $('#SignIn').html('Sign In');
-
-                setTimeout(() => {
-                    $('#loginStatus').fadeOut(1000);
-                }, 5000);
-
-                $('#loginStatus').val(null).show();
+                serverResponse.status = asyncRequest.status;
+                serverResponse.userID = asyncRequest.userID;
+                serverResponse.firstName = asyncRequest.firstName;
+                serverResponse.lastName = asyncRequest.lastName;
+                serverResponse.privilege = asyncRequest.priviledge;
+                serverResponse.username = asyncRequest.username;
+                serverResponse.error = asyncRequest.error;
             },
             complete: () => {
-
+                if (serverResponse.status == true) {
+                    localStorage.setItem('firstName', serverResponse.firstName);
+                    localStorage.setItem('lastName', serverResponse.lastName)
+                    localStorage.setItem('status', serverResponse.status);
+                    localStorage.setItem('userID', serverResponse.userID);
+                    localStorage.setItem('username', serverResponse.username);
+                    localStorage.setItem('privilege', serverResponse.privilege);
+                    location.href = 'pages/main.html';
+                } else
+                    $('#notification').html(serverResponse.error).addClass('label label-warning');
+                Login.Username.val(null);
+                Login.Password.val(null);
+                $('#sign-in-button').html('Sign In');
+                setTimeout(() => {
+                    $('#notification').fadeOut(1000);
+                    $('#notification').val(null).removeClass('label label-warning').show();
+                }, 5000)
             }
         })
 
@@ -323,7 +328,7 @@ var SignUp = {
     }
 }
 
-var authenticate = {
+var Authenticate = {
     flag: false,
     Email: $('#Email'),
     Password: $('#ResetPassword'),
@@ -357,7 +362,7 @@ var Search = {
     match: () => {
         $.ajax({
             url: 'https://filmplace.potterincorporated.com/config/search.php',
-            type: authenticate.type.POST,
+            type: Authenticate.type.POST,
             beforeSend: () => {
                 $('#previewUploads').html('<img src="images/preloader/house_loading.gif" />')
             },
@@ -367,13 +372,13 @@ var Search = {
                 $('#searchTitle').html('Search Result');
             }
         })
-        authenticate.flag = false;
+        Authenticate.flag = false;
     },
     advance: () => {
         $.ajax({
             url: 'config/search.php',
-            type: authenticate.type.POST,
-            dataType: authenticate.JSON,
+            type: Authenticate.type.POST,
+            dataType: Authenticate.JSON,
             beforeSend: () => $('#previewUploads').html('<img src="images/dual-ring-loader.gif" />'),
             data: {
                 city: Search.city.val(),
@@ -387,32 +392,44 @@ var Search = {
             }
         })
     }
-
 }
 
-var Preview = {
-    latestUploads: () => {
-        $.ajax({
-            url: 'https://filmplace.potterincorporated.com/config/search.php',
-            type: authenticate.type.GET,
-            beforeSend: () => $('#previewUploads').html('<img src="images/preloader/house_loading.gif" width="25" />'),
-            data: { login: true },
-            success: (asyncRequest) => $('#previewUploads').html(asyncRequest)
-        })
-    },
-    myGallery: () => {
-        $.ajax({
-            url: 'https://filmplace.potterincorporated.com/config/gallery.php',
-            type: authenticate.type.POST,
-            data: {
-                activeUser: localStorage.getItem('status'),
-                owner: localStorage.getItem('name'),
-                telephone: localStorage.getItem('telephone')
-            },
-            success: (asyncRequest) => $('#gallery').html(asyncRequest)
-        })
-    }
+
+const serverResponse = {
+    error: "",
+    message: "",
+    status: undefined,
+    userID: "",
+    firstName: "",
+    lastName: "",
+    privilege: "",
+    username: ""
 }
+
+
+// var Preview = {
+//     latestUploads: () => {
+//         $.ajax({
+//             url: 'https://filmplace.potterincorporated.com/config/search.php',
+//             type: Authenticate.type.GET,
+//             beforeSend: () => $('#previewUploads').html('<img src="images/preloader/house_loading.gif" width="25" />'),
+//             data: { login: true },
+//             success: (asyncRequest) => $('#previewUploads').html(asyncRequest)
+//         })
+//     },
+//     myGallery: () => {
+//         $.ajax({
+//             url: 'https://filmplace.potterincorporated.com/config/gallery.php',
+//             type: Authenticate.type.POST,
+//             data: {
+//                 activeUser: localStorage.getItem('status'),
+//                 owner: localStorage.getItem('name'),
+//                 telephone: localStorage.getItem('telephone')
+//             },
+//             success: (asyncRequest) => $('#gallery').html(asyncRequest)
+//         })
+//     }
+// }
 
 /**
  * Camera Plugin

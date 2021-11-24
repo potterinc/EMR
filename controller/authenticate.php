@@ -1,40 +1,41 @@
 <?php
 
-require_once 'conn.php';
+require_once 'config.php';
+$response = new Notification;
 
 # Login Algorithm
-if (isset($_REQUEST['loginEmail']) || isset($_REQUEST['loginPassword'])) {
-    # SANITIZE EMAIL
-    $email = filter_var(trim($_REQUEST['loginEmail']), FILTER_VALIDATE_REGEXP, array("options" => array("regexp" => "/^[a-zA-Z0-9.@_-]+$/")));
-    $username = filter_var(trim($_REQUEST['loginEmail']), FILTER_VALIDATE_REGEXP, array("options" => array("regexp" => "/^[a-zA-Z0-9]+$/")));
-
-    # SERVER QUERY
-    $sign_in = 'SELECT * FROM investor WHERE (privilege="' . $_REQUEST["privilege"] . '") AND (client_email ="' . $email . '" OR client_name="' . $username . '")';
-    $result = $conn->query($sign_in);
+if (isset($_REQUEST['username'])) {
+    
+    $username = filter_var(trim($_REQUEST['username']), FILTER_VALIDATE_REGEXP, array("options" => array("regexp" => "/^[a-zA-Z0-9.@_-]+$/")));
+    
+    // Parameters
+    $login_query = "SELECT * FROM users WHERE user_username='$username'";
+    $result = $conn->query($login_query);
 
     if ($result->num_rows > 0) {
         while ($data = $result->fetch_assoc()) {
             # DECRYPT PASSWORD
-            if (password_verify($_REQUEST['loginPassword'], $data['client_password'])) {
-                $response['username'] = $data['client_name'];
-                $response['status'] = TRUE;
-                $response['clientId'] = $data['client_id'];
-                $response['email'] = $data['client_email'];
-                $response['privilege'] = $data['privilege'];
+            if (password_verify($_REQUEST['password'], $data['user_password'])) {
+                $response->username = $data['user_username'];
+                $response->status = TRUE;
+                $response->userID = $data['user_id'];
+                $response->privilege = $data['iser_privilege'];
+                $response->firstname = $data['user_firstname'];
+                $response->lastname = $data['user_lastname'];
                 print(json_encode($response, JSON_PRETTY_PRINT));
             } else {
-                $response['error'] = 'Invalid Email/Password';
+                $response->error = 'Invalid Username or Password';
                 print(json_encode($response, JSON_PRETTY_PRINT));
             }
         }
     } else {
-        $response['error'] = "Email does not exist";
+        $response->error = "Email does not exist";
         print(json_encode($response, JSON_PRETTY_PRINT));
     }
 }
 
 # New Account
-if (isset($_REQUEST['email']) || isset($_REQUEST['username'])) {
+if (isset($_REQUEST['email']) || isset($_REQUEST['userame'])) {
     // Sanitize Name and Email
     $email = filter_var(trim($_REQUEST['email']), FILTER_VALIDATE_REGEXP, array("options" => array("regexp" => "/^[a-zA-Z0-9.@_-]+$/")));
     $username = filter_var(trim($_REQUEST['username']), FILTER_VALIDATE_REGEXP, array("options" => array("regexp" => "/^[a-zA-Z0-9]+$/")));
