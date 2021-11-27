@@ -1,11 +1,11 @@
-$(document).ready(() => {
-    
+$(() => {
+
     var Appointment = {
         startDate: $('#appointment-date-from'),
         endDate: $('#appointment-date-to'),
         searchRecord: () => {
             $.ajax({
-                url: 'controller/appointment.php',
+                url: '../controller/appointment.php',
                 type: Authenticate.type.POST,
                 dataType: Authenticate.JSON,
                 data: {
@@ -41,7 +41,7 @@ $(document).ready(() => {
          */
         initRecord: (appDate, pID, appStatus) => {
             $.ajax({
-                url: "controller/appointment.php",
+                url: "../controller/appointment.php",
                 dataType: Authenticate.JSON,
                 type: Authenticate.type.POST,
                 data: {
@@ -96,7 +96,7 @@ $(document).ready(() => {
         data: ""
     }
 
-    $('#search-button').click(() => Appointment.searchRecord())
+    $('#search-button').on('click', () => Appointment.searchRecord())
     Appointment.initRecord(Authenticate.getToday());
 
 })

@@ -1,22 +1,22 @@
 /**
  * NEW PATIENT
  */
-$('#new-individual').click(() => $('#UIPanel').load('pages/patient.html'))
-$('#new-corporate').click(() => $('#UIPanel').load('pages/corporate.html'))
-$('#new-family').click(() => $('#UIPanel').load('pages/family.html'))
+$('#new-individual').on('click', () => $('#UIPanel').load('patient.html'))
+$('#new-corporate').on('click', () => $('#UIPanel').load('corporate.html'))
+$('#new-family').on('click', () => $('#UIPanel').load('family.html'))
 
 /*
  * APPOINTMENTS
  */
-$('#new-payment').click(() => $('#UIPanel').load('pages/payment.html'))
-$('#new-refund').click(() => $('#UIPanel').load('pages/refund.html'))
-$('#new-appointment').click(() => $('#UIPanel').load('pages/appointment.html'))
-// $('#all-appointment').click(() => $('#UIPanel').load('pages/appointments/view-all-appointment.html'))
-$('#update-appointment-records').click(() => $('#UIPanel').load('pages/appointments/individual-appointment.html'))
+$('#new-payment').on('click', () => $('#UIPanel').load('payment.html'))
+$('#new-refund').on('click', () => $('#UIPanel').load('refund.html'))
+$('#new-appointment').on('click', () => $('#UIPanel').load('appointment.html'))
+// $('#all-appointment').on(() => $('#UIPanel').load('appointments/view-all-appointment.html'))
+$('#update-appointment-records').on('click', () => $('#UIPanel').load('appointments/individual-appointment.html'))
 
 
 /**
  * ENTITY
  */
-$('#corporate-entity').click(() => $('#UIPanel').load('pages/corporate-entity.html'))
-$('#family-entity').click(() => $('#UIPanel').load('pages/family-entity.html'))
+$('#corporate-entity').on('click', () => $('#UIPanel').load('corporate-entity.html'))
+$('#family-entity').on('click', () => $('#UIPanel').load('family-entity.html'))

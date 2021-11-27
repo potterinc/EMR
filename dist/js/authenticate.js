@@ -11,6 +11,25 @@ $('#sign-in-button').on('click', () => {
     }
 });
 
+// New User Registration
+$('#new-user').on('click', () => {
+    validateInput('validateUser');
+    if (Authenticate.flag == true) {
+        if (SignUp.password.val() == SignUp.confirmPassword.val()) {
+            SignUp.register()
+            Authenticate.flag = false;
+            return Authenticate.flag;
+        }
+        else {
+            $('#notification').html('Passwords does not match: Try agian').addClass('label label-warning');
+            setTimeout(() => {
+                $('#notification').fadeOut(1000);
+                $('#notification').html(null).removeClass('label label-warning').show();
+            }, 5000)
+        }
+
+    }
+})
 
 // Password Verification Asychronous Request 
 $('#VerifyAccount').on('click', () => {
@@ -110,48 +129,6 @@ $('#PasswordReset').click(() => {
 
 });
 
-// New User Registration
-$('#SignUp').click(() => {
-    validateInput('validateUser');
-    //Sending asynchronous request
-    if (Authenticate.flag == true) {
-        $.ajax({
-            url: 'https://filmplace.potterincorporated.com/config/auth.php',
-            type: Authenticate.type.POST,
-            dataType: Authenticate.JSON,
-            data: {
-                fullName: SignUp.fullName.val(),
-                newUserEmail: SignUp.Email.val(),
-                telephone: SignUp.telephone.val(),
-                NewSecurityQuestion: SignUp.Question.val(),
-                answer: SignUp.Answer.val(),
-                password: SignUp.Password.val(),
-                dateOfRegistration: SignUp.getToday()
-            },
-            beforeSend: () => {
-                $('#SignUp').html('<img src="./images/preloader/fading_circles.gif" width="32" />');
-            },
-            success: (asyncRequest) => {
-                SignUp.fullName.val(null);
-                SignUp.Email.val(null);
-                SignUp.telephone.val(null);
-                SignUp.Question.val('null');
-                SignUp.Answer.val(null);
-                SignUp.Password.val(null);
-                $('#SignUp').html('Sign Up');
-
-                $('#SignUpNotification').html(asyncRequest.Message);
-                setTimeout(() => {
-                    $('#SignUpNotification').fadeOut(1000);
-                    $('#SignUpNotification').val(null).show();
-                    location.href = 'index.html';
-                }, 5000)
-            }
-        })
-        Authenticate.flag = false;
-        return Authenticate.flag;
-    }
-})
 
 /**
  * File Upload algorithm
@@ -278,11 +255,14 @@ var Login = {
                 serverResponse.userID = asyncRequest.userID;
                 serverResponse.firstName = asyncRequest.firstName;
                 serverResponse.lastName = asyncRequest.lastName;
-                serverResponse.privilege = asyncRequest.priviledge;
+                serverResponse.privilege = asyncRequest.privilege;
                 serverResponse.username = asyncRequest.username;
                 serverResponse.error = asyncRequest.error;
             },
             complete: () => {
+                Login.Username.val(null);
+                Login.Password.val(null);
+                $('#sign-in-button').html('Sign In');
                 if (serverResponse.status == true) {
                     localStorage.setItem('firstName', serverResponse.firstName);
                     localStorage.setItem('lastName', serverResponse.lastName)
@@ -291,15 +271,13 @@ var Login = {
                     localStorage.setItem('username', serverResponse.username);
                     localStorage.setItem('privilege', serverResponse.privilege);
                     location.href = 'pages/main.html';
-                } else
+                } else {
                     $('#notification').html(serverResponse.error).addClass('label label-warning');
-                Login.Username.val(null);
-                Login.Password.val(null);
-                $('#sign-in-button').html('Sign In');
-                setTimeout(() => {
-                    $('#notification').fadeOut(1000);
-                    $('#notification').val(null).removeClass('label label-warning').show();
-                }, 5000)
+                    setTimeout(() => {
+                        $('#notification').fadeOut(1000);
+                        $('#notification').val(null).removeClass('label label-warning').show();
+                    }, 5000)
+                }
             }
         })
 
@@ -307,12 +285,65 @@ var Login = {
 }
 
 var SignUp = {
-    fullName: $('#FullName'),
-    telephone: $('#Telephone'),
-    Question: $('#NewQuestion'),
-    Email: $('#NewEmail'),
-    Answer: $('#NewAnswer'),
-    Password: $('#NewPassword'),
+    firstName: $('#new-first-name'),
+    lastName: $('#new-last-name'),
+    securityQuestion: $('#security-question'),
+    securityAnswer: $('#security-answer'),
+    username: $('#new-username'),
+    password: $('#new-password'),
+    confirmPassword: $('#confirm-password'),
+
+    register: () => {
+        $.ajax({
+            url: '../controller/authenticate.php',
+            type: Authenticate.type.POST,
+            dataType: Authenticate.JSON,
+            data: {
+                firstname: SignUp.firstName.val(),
+                lastname: SignUp.lastName.val(),
+                securityQuestion: SignUp.securityQuestion.val(),
+                answer: SignUp.securityAnswer.val(),
+                newUsername: SignUp.username.val(),
+                newPassword: SignUp.password.val(),
+                dateOfRegistration: SignUp.getToday()
+            },
+            beforeSend: () => {
+                $('#new-user').html('<label></label>');
+                $('#new-user label').addClass('loader');
+            },
+            success: (asyncRequest) => {
+                serverResponse.status = asyncRequest.status;
+                serverResponse.error = asyncRequest.error;
+                serverResponse.message = asyncRequest.success;
+            },
+            complete: () => {
+                SignUp.firstName.val(null)
+                SignUp.lastName.val(null)
+                SignUp.securityQuestion.val(null)
+                SignUp.securityAnswer.val(null)
+                SignUp.username.val(null)
+                SignUp.password.val(null)
+                SignUp.confirmPassword.val(null)
+                $('#new-user').html('Register');
+                if (serverResponse.status == true) {
+                    $('#notification').html(serverResponse.message).addClass('label label-success');
+                    setTimeout(() => {
+                        $('#notification').html('Redirecting...').addClass('label label-success');
+                        $('#notification').fadeOut(1000);
+                        $('#notification').val(null).removeClass('label label-success label-success').show();
+                        location.href = '../index.html';
+                    }, 5000)
+                }
+                else {
+                    $('#notification').html(serverResponse.error).addClass('label label-warning');
+                    setTimeout(() => {
+                        $('#notification').fadeOut(1000);
+                        $('#notification').val(null).removeClass('label label-warning').show();
+                    }, 5000)
+                }
+            }
+        })
+    },
     /**
      * Get the current date of the client system in YYYY-DD-MM format
      */

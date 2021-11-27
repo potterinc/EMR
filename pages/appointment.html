@@ -133,7 +133,7 @@
     $('#add-drug-prescription').click(() => $('#drug-prescription').show(500));
 
 
-    $(document).ready(() => {
+    $(() => {
 
         // Initializing
         $('#save-record').click(() => {
@@ -164,7 +164,7 @@
             duration: $('#duration'),
             saveRecord: () => {
                 $.ajax({
-                    url: 'controller/appointment.php',
+                    url: '../controller/appointment.php',
                     type: Authenticate.type.POST,
                     dataype: Authenticate.JSON,
                     data: {
@@ -222,7 +222,7 @@
             },
             listDrugs: () => {
                 $.ajax({
-                    url: 'controller/appointment.php',
+                    url: '../controller/appointment.php',
                     type: Authenticate.type.POST,
                     dataType: Authenticate.JSON,
                     data: { drugs: true },
@@ -237,7 +237,7 @@
 
             listPatients: () => {
                 $.ajax({
-                    url: 'controller/appointment.php',
+                    url: '../controller/appointment.php',
                     type: Authenticate.type.POST,
                     dataType: Authenticate.JSON,
                     data: { patient: true },
