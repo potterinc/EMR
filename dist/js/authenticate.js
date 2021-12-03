@@ -32,41 +32,12 @@ $('#new-user').on('click', () => {
 })
 
 // Password Verification Asychronous Request 
-$('#VerifyAccount').on('click', () => {
-    validateInput('validateAccount');
+$('#validate-user').on('click', () => {
+    validateInput('validateUser');
 
     //Sending asynchronous request
     if (Authenticate.flag == true) {
-        $.ajax({
-            url: 'https://filmplace.potterincorporated.com/config/auth.php',
-            dataType: Authenticate.JSON,
-            type: Authenticate.type.POST,
-            beforeSend: () => {
-                $('#VerifyAccount').html('<img src="./images/preloader/fading_circles.gif" width="32" />')
-            },
-            data: {
-                verifiedEmail: Authenticate.Email.val(),
-                answer: Authenticate.Answer.val(),
-                securityQuestion: Authenticate.Question.val()
-            },
-            success: (asyncRequest) => {
-                Authenticate.Email.val(null);
-                Authenticate.Answer.val(null);
-                Authenticate.Question.val('null');
-                $('#VerifyAccount').html('Verify');
-                if (asyncRequest.Status === true) {
-                    $('#small-dialog2').html(Authenticate.ChangePassword);
-                    Authenticate.verifiedUserId.val(asyncRequest.userId);
-                }
-                else {
-                    $('#AccountVerificationStatus').html(asyncRequest.Message);
-                    setTimeout(() => {
-                        $('#AccountVerificationStatus').fadeOut(1000);
-                    }, 5000);
-                    $("#AccountVerificationStatus").val(null).show();
-                }
-            }
-        })
+        SignUp.resetPassword();
         Authenticate.flag = false;
         return Authenticate.flag;
     }
@@ -253,8 +224,8 @@ var Login = {
             success: (asyncRequest) => {
                 serverResponse.status = asyncRequest.status;
                 serverResponse.userID = asyncRequest.userID;
-                serverResponse.firstName = asyncRequest.firstName;
-                serverResponse.lastName = asyncRequest.lastName;
+                serverResponse.firstName = asyncRequest.firstname;
+                serverResponse.lastName = asyncRequest.lastname;
                 serverResponse.privilege = asyncRequest.privilege;
                 serverResponse.username = asyncRequest.username;
                 serverResponse.error = asyncRequest.error;
@@ -340,6 +311,49 @@ var SignUp = {
                         $('#notification').fadeOut(1000);
                         $('#notification').val(null).removeClass('label label-warning').show();
                     }, 5000)
+                }
+            }
+        })
+    },
+    resetPassword: () => {
+        $.ajax({
+            url: '../controller/authenticate.php',
+            dataType: Authenticate.JSON,
+            type: Authenticate.type.POST,
+            beforeSend: () => {
+                $('#validate-user').html('<label>')
+                $('#validate-user label').addClass('loader')
+            },
+            data: {
+                userName: SignUp.username.val(),
+                answer: SignUp.securityAnswer.val(),
+                question: SignUp.securityQuestion.val()
+            },
+            success: (asyncRequest) => {
+                serverResponse.error = asyncRequest.error;
+                serverResponse.success = asyncRequest.success;
+                serverResponse.status = asyncRequest.status;
+                serverResponse.userID = asyncRequest.userID;
+            },
+            complete: () => {
+                SignUp.username.val(null);
+                SignUp.securityAnswer.val(null);
+                SignUp.securityQuestion.val('null');
+
+                if (serverResponse.status == true) {
+                    $('#notification').html(serverResponse.success).addClass('label label-success');
+                    $('#userID').html(serverResponse.userID);
+                    setTimeout(() => {
+                        $('#notification').fadeOut(1000).val(null).removeClass('label label-success').show();
+                        $('#validate-account').html($('#reset-password').show())
+                    }, 5000);
+                } else {
+                    $('#notification').html(serverResponse.error).addClass('label label-danger');
+                    
+                    setTimeout(() => {
+                        $('#validate-user').html('Validate');
+                        $('#notification').fadeOut(1000).val(null).removeClass('label label-danger').show();
+                    }, 5000);
                 }
             }
         })

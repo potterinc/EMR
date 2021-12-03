@@ -71,28 +71,32 @@ if (isset($_REQUEST['firstname']) && isset($_REQUEST['lastname'])) {
         $response->success = "Registration Successful";
     } else {
         $response->status = FALSE;
-        $response->error = "Username already exists: Try Again". $conn->error;
+        $response->error = "Username already exists: Try Again";
     }
     print(json_encode($response, JSON_PRETTY_PRINT));
 }
 
 # Password verification
-if (isset($_REQUEST['userEmail']) && isset($_REQUEST['userAnswer'])) {
-    $email = filter_var(trim($_REQUEST['userEmail']), FILTER_VALIDATE_REGEXP, array("options" => array("regexp" => "/^[a-zA-Z0-9.@_-]+$/")));
-    $verification_query = "SELECT * FROM celteck_user WHERE user_email_address='$email' AND 
-    user_security_question = '" . $_REQUEST['userQuestion'] . "' AND user_answer='" . $_REQUEST["userAnswer"] . "'";
-    $result = $conn->query($verification_query);
+if (isset($_REQUEST['userName']) && isset($_REQUEST['answer'])) {
+
+    $username = filter_var(trim($_REQUEST['userName']), FILTER_VALIDATE_REGEXP, array("options" => array("regexp" => "/^[a-zA-Z0-9.@_]+$/")));
+    $verify_user = "SELECT * FROM users WHERE 
+    user_username='$username' AND 
+    user_question = '" . $_REQUEST['question'] . "' 
+    AND user_answer='" . $_REQUEST["answer"] . "'";
+
+    $result = $conn->query($verify_user);
     if ($result->num_rows > 0) {
-        while ($db_data = $result->fetch_assoc()) {
-            $response['email'] = $db_data['user_email_address'];
-            $response['verify'] = TRUE;
-            $response['userId'] = intval($db_data['user_id']);
+        while ($data = $result->fetch_assoc()) {
+            $response->success = "<i class='fa fa-check'></i> Verified user, ".$data['user_firstname'];
+            $response->status = TRUE;
+            $response->userID = intval($data['user_id']);
         }
-        print(json_encode($response));
+        print(json_encode($response, JSON_PRETTY_PRINT));
     } else {
-        $response['error'] = '<small class="alert alert-danger w3-animate-bottom">Verification Failed</small>';
-        print(json_encode($response));
-        return FALSE;
+        $response->error = '<i class="fa fa-times"></i> Failed '.$conn->error;
+        $response->status = FALSE;
+        print(json_encode($response, JSON_PRETTY_PRINT));
     }
 }
 
