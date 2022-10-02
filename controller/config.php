@@ -11,22 +11,19 @@ if (!$conn)
 /**
  * Notification response
  */
-class Notification extends User
+class Notification
 {
-    // Properties
-    public $error;
-    public $status;
-    public $success;
-    public $result;
+    // public $error;
+    // public $status;
+    // public $message;
+    // public $data;
 }
 
-class User {
-    //Properties
+class User
+{
     public $firstname;
     public $lastname;
     public $userID;
     public $username;
     public $privilege;
-
-
 }

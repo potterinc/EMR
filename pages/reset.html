@@ -32,71 +32,81 @@
 </head>
 
 <body class="hold-transition register-page">
-    <div class="register-box">
-        <div class="register-logo">
-            <a href="../index.html"><b>Gilead</b>EMR</a>
-        </div>
+    <div class="center">
+        <div class="register-box">
+            <div class="register-logo">
+                <a href="../index.html"><b>Gilead</b>EMR</a>
+            </div>
 
-        <div class="register-box-body">
-            <p class="login-box-msg">Reset your password</p>
+            <div class="register-box-body">
+                <p class="login-box-msg" id="reset-form-label">Reset your password</p>
 
-            <form>
-                <div id="validate-account">
+                <form>
+                    <div id="validate-account">
 
-                    <div class="form-group has-feedback">
-                        <input type="text" class="form-control" id="new-username" placeholder="Username" validateUser>
-                        <span class="fa fa-at form-control-feedback"></span>
-                    </div>
-                    <div class="form-group has-feedback">
-                        <select id="security-question" class="form-control">
-                            <option value="null" selected disabled>Security Questions</option>
-                            <option value="In what city were you born?">In what city were you born?</option>
-                            <option value="What is the name of your favourite pet?">What is the name of your favourite pet?</option>
-                            <option value="What is your mother\'s maiden name?">What is your mother's maiden name?</option>
-                            <option value="What high schood did you attend?">What high schood did you attend?</option>
-                            <option value="What is the name of your first school?">What is the name of your first school?</option>
-                            <option value="What is the make of your first car?">What is the make of your first car?"</option>
-                            <option value="What was your favourite food as a child?">What was your favourite food as a child?</option>
-                            <option value="Where did you meet your spouce?">Where did you meet your spouce?</option>
-                        </select>
-                    </div>
-                    <div class="form-group has-feedback">
-                        <input type="text" class="form-control" id="security-answer" placeholder="Answer" validateUser>
-                        <span class="glyphicon glyphicon-check form-control-feedback"></span>
-                    </div>
-                    <div class="row">
-                        <div class="col-xs-4">
-                            <button type="button" id="validate-user"
-                                class="btn btn-primary btn-block btn-flat">Validate</button>
+                        <div class="form-group has-feedback">
+                            <input type="text" class="form-control" id="new-username" placeholder="Username"
+                                validateUser>
+                            <span class="fa fa-at form-control-feedback"></span>
+                        </div>
+                        <div class="form-group has-feedback">
+                            <select id="security-question" class="form-control">
+                                <option value="null" selected disabled>Security Questions</option>
+                                <option value="In what city were you born?">In what city were you born?</option>
+                                <option value="What is the name of your favourite pet?">What is the name of your
+                                    favourite pet?</option>
+                                <option value="What is your mother\'s maiden name?">What is your mother's maiden name?
+                                </option>
+                                <option value="What high schood did you attend?">What high schood did you attend?
+                                </option>
+                                <option value="What is the name of your first school?">What is the name of your first
+                                    school?</option>
+                                <option value="What is the make of your first car?">What is the make of your first car?"
+                                </option>
+                                <option value="What was your favourite food as a child?">What was your favourite food as
+                                    a child?</option>
+                                <option value="Where did you meet your spouce?">Where did you meet your spouce?</option>
+                            </select>
+                        </div>
+                        <div class="form-group has-feedback">
+                            <input type="text" class="form-control" id="security-answer" placeholder="Answer"
+                                validateUser>
+                            <span class="glyphicon glyphicon-check form-control-feedback"></span>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-4">
+                                <button type="button" id="validate-user"
+                                    class="btn btn-primary btn-block btn-flat">Validate</button>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div hidden id="reset-password">
-                    <span id="userID" hidden></span>
-                    <div class="form-group has-feedback">
-                        <input type="password" class="form-control" id="new-password" placeholder="Password"
-                            checkPassword>
-                        <span class="fa fa-key form-control-feedback"></span>
-                    </div>
-                    <div class="form-group has-feedback">
-                        <input type="password" class="form-control" id="confirm-password" placeholder="Retype password"
-                            checkPassword>
-                        <span class="fa fa-key form-control-feedback"></span>
-                    </div>
-                    <div class="row">
-                        <div class="col-xs-4">
-                            <button type="button" id="save-password"
-                                class="btn btn-primary btn-block btn-flat">Reset</button>
+                    <div hidden id="reset-password">
+                        <span id="userID" hidden></span>
+                        <div class="form-group has-feedback">
+                            <input type="password" class="form-control" id="new-password" placeholder="New password"
+                                checkPassword>
+                            <span class="fa fa-key form-control-feedback"></span>
+                        </div>
+                        <div class="form-group has-feedback">
+                            <input type="password" class="form-control" id="confirm-password"
+                                placeholder="Confirm password" checkPassword>
+                            <span class="fa fa-key form-control-feedback"></span>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-4">
+                                <button type="button" id="save-password" class="btn btn-primary btn-flat">Change
+                                    Password</button>
+                            </div>
                         </div>
                     </div>
-                </div>
-            </form>
-            <div id="notification"></div>
-            <hr />
+                </form>
+                <div id="notification"></div>
+                <hr />
 
-            <a href="../index.html" class="text-center">I already have a membership</a>
+                <a href="../index.html" class="text-center">I already have a membership</a>
+            </div>
+            <!-- /.form-box -->
         </div>
-        <!-- /.form-box -->
     </div>
     <!-- /.register-box -->
 
@@ -106,7 +116,9 @@
     <script src="../bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
     <!-- iCheck -->
     <script src="../plugins/iCheck/icheck.min.js"></script>
+    <script src="../dist/js/auth.service.js"></script>
     <script src="../dist/js/authenticate.js"></script>
+
     <script>
         $(function () {
             $('input').iCheck({

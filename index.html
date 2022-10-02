@@ -28,50 +28,52 @@
   <!-- Google Font -->
   <link rel="stylesheet"
     href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
-<link rel="stylesheet" href="dist/css/loader.css">
+  <link rel="stylesheet" href="dist/css/loader.css">
 </head>
 
 <body class="hold-transition login-page">
-  <div class="login-box">
-    <div class="login-logo">
-      <a href="#"><b>Gilead</b>EMR</a>
-    </div>
-    <!-- /.login-logo -->
-    <div class="login-box-body">
-      <p class="login-box-msg">Sign in to start your session</p>
+  <div class="center">
+    <div class="login-box">
+      <div class="login-logo">
+        <a href="#"><b>Gilead</b>EMR</a>
+      </div>
+      <!-- /.login-logo -->
+      <div class="login-box-body">
+        <p class="login-box-msg">Sign in to start your session</p>
 
-      <form id="login-form">
-        <div class="form-group has-feedback">
-          <input type="text" class="form-control" id="login-username" validateLogin placeholder="Username">
-          <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
-        </div>
-        <div class="form-group has-feedback">
-          <input type="password" class="form-control" id="login-password" validateLogin placeholder="*********">
-          <span class="glyphicon glyphicon-lock form-control-feedback"></span>
-        </div>
-        <div class="row">
-          <!-- <div class="col-xs-8">
+        <form id="login-form">
+          <div class="form-group has-feedback">
+            <input type="text" class="form-control" id="login-username" validateLogin placeholder="Username">
+            <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
+          </div>
+          <div class="form-group has-feedback">
+            <input type="password" class="form-control" id="login-password" validateLogin placeholder="*********">
+            <span class="glyphicon glyphicon-lock form-control-feedback"></span>
+          </div>
+          <div class="row">
+            <!-- <div class="col-xs-8">
           <div class="checkbox icheck">
             <label>
               <input type="checkbox"> Remember Me
             </label>
           </div>
         </div> -->
-          <!-- /.col -->
-          <div class="col-md-4">
-            <button type="button" id="sign-in-button" class="btn btn-primary btn-block btn-flat">Sign In</button>
+            <!-- /.col -->
+            <div class="col-md-4">
+              <button type="button" id="sign-in-button" class="btn btn-primary btn-block btn-flat">Sign In</button>
+            </div>
+            <!-- /.col -->
           </div>
-          <!-- /.col -->
-        </div>
-      </form>
-      <div id="notification"></div>
-      <hr />
+        </form>
+        <div id="notification"></div>
+        <hr />
 
-      <a href="pages/reset.html" id="password-reset">I forgot my password</a><br>
-      <a href="pages/register.html" class="text-center">Register a new membership</a>
+        <a href="pages/reset.html" id="password-reset">I forgot my password</a><br>
+        <a href="pages/register.html" class="text-center">Register a new membership</a>
 
+      </div>
+      <!-- /.login-box-body -->
     </div>
-    <!-- /.login-box-body -->
   </div>
   <!-- /.login-box -->
 
@@ -81,6 +83,7 @@
   <script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
   <!-- iCheck -->
   <script src="plugins/iCheck/icheck.min.js"></script>
+  <script src="dist/js/auth.service.js"></script>
   <script src="dist/js/authenticate.js"></script>
   <script>
     $(function () {

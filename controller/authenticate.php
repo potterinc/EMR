@@ -68,7 +68,7 @@ if (isset($_REQUEST['firstname']) && isset($_REQUEST['lastname'])) {
     $result = $conn->query($sign_up);
     if ($result == TRUE) {
         $response->status = TRUE;
-        $response->success = "Registration Successful";
+        $response->message = "Registration messageful";
     } else {
         $response->status = FALSE;
         $response->error = "Username already exists: Try Again";
@@ -88,44 +88,24 @@ if (isset($_REQUEST['userName']) && isset($_REQUEST['answer'])) {
     $result = $conn->query($verify_user);
     if ($result->num_rows > 0) {
         while ($data = $result->fetch_assoc()) {
-            $response->success = "<i class='fa fa-check'></i> Verified user, ".$data['user_firstname'];
-            $response->status = TRUE;
+            $response->message = "User verified as: ".$data['user_firstname'];
+            $response->status = true;
             $response->userID = intval($data['user_id']);
         }
         print(json_encode($response, JSON_PRETTY_PRINT));
     } else {
-        $response->error = '<i class="fa fa-times"></i> Failed '.$conn->error;
+        $response->error = 'User verification failed';
         $response->status = FALSE;
         print(json_encode($response, JSON_PRETTY_PRINT));
     }
 }
 
 # CHANGE PASSWORD
-if (isset($_REQUEST['newassword'])) {
-    if ($_REQUEST['newPassword'] == $_REQUEST['verifyNewPassword']) {
-        $update_action = "UPDATE celteck_user SET user_password='" . password_hash($_REQUEST["newPassword"], PASSWORD_DEFAULT) .
-            "' WHERE user_id=" . $_REQUEST["userId"];
-        $result = $conn->query($update_action);
-        $data['status'] = TRUE;
-        $data['msg'] = '<small class="alert alert-success w3-animate-bottom">Pasword Changed <a href="index.html">Sign In</a></small>';
-        print(json_encode($data));
-    } else {
-        $data['error'] = '<small class="alert alert-danger w3-animate-bottom">Password Does not Match</small>';
-        return FALSE;
-        print(json_encode($data));
-    }
-}
-
-# INITIALIZING DATABASE
-
-if (isset($_REQUEST['queryDB'])) {
-    $sql = "SELECT * FROM celteck_user";
-    $result = $conn->query($sql);
-
-    if ($result->num_rows == 0)
-        $db_response['DBStatus'] = NULL;
-    else
-        $db_response['DBStatus'] = $result->num_rows;
-
-    print(json_encode($db_response));
+if (isset($_REQUEST['newPassword'])) {
+    $update_action = "UPDATE users SET user_password='" . password_hash($_REQUEST["newPassword"], PASSWORD_DEFAULT) .
+        "' WHERE user_id=" . $_REQUEST["userId"];
+    $result = $conn->query($update_action);
+    $response->status = true;
+    $response->message = 'Pasword changed!';
+    print(json_encode($response));
 }

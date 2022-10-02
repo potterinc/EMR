@@ -177,7 +177,8 @@ function appointment_search()
 }
 
 // Update Appointment Records
-function update_status(){
+function update_status()
+{
     require 'config.php';
     $recordID = $_REQUEST['recordID'];
 
