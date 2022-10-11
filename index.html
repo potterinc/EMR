@@ -17,6 +17,10 @@
   <link rel="stylesheet" href="dist/css/AdminLTE.min.css">
   <!-- iCheck -->
   <link rel="stylesheet" href="plugins/iCheck/square/blue.css">
+  <script>
+      if (localStorage.getItem('loginStatus'))
+        location.href = 'pages/main.html'
+  </script>
 
   <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
   <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -93,6 +97,8 @@
         radioClass: 'iradio_square-blue',
         increaseArea: '20%' /* optional */
       });
+
+    
     });
   </script>
 </body>

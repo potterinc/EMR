@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -19,7 +20,12 @@
   <!-- AdminLTE Skins. Choose a skin from the css/skins
        folder instead of downloading all of them to reduce the load. -->
   <link rel="stylesheet" href="../dist/css/skins/skin-blue.min.css">
-
+  <script>
+    
+    // User Session
+      if (!localStorage.getItem('loginStatus'))
+        location.href = '../index.html'
+  </script>
   <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
   <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
   <!--[if lt IE 9]>
@@ -38,7 +44,7 @@
     <header class="main-header">
 
       <!-- Logo -->
-      <a href="../index.html" class="logo">
+      <a href="#" class="logo">
         <!-- mini logo for sidebar mini 50x50 pixels -->
         <span class="logo-mini"><b>G</b>MR</span>
         <!-- logo for regular state and mobile devices -->
@@ -64,7 +70,7 @@
             <li class="dropdown user user-menu">
               <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                 <img src="../dist/img/user2-160x160.jpg" class="user-image" alt="User Image">
-                <span class="hidden-xs">Alexander Pierce</span>
+                <span class="hidden-xs active-user"></span>
               </a>
               <ul class="dropdown-menu">
                 <!-- User image -->
@@ -72,14 +78,14 @@
                   <img src="../dist/img/user2-160x160.jpg" class="img-circle" alt="User Image">
 
                   <p>
-                    Alexander Pierce - Web Developer
-                    <small>Member since Nov. 2012</small>
+                    <label class="active-user"></label> - <span class="role"></span>
+                    <small>Member since <label class="doe"></label></small>
                   </p>
                 </li>
                 <!-- Menu Footer-->
                 <li class="user-footer">
                   <div class="pull-right">
-                    <a href="#" class="btn btn-default btn-flat">Sign out</a>
+                    <a href="#" class="btn btn-default btn-flat" id="logout">Log Out</a>
                   </div>
                 </li>
               </ul>
@@ -102,7 +108,7 @@
             <img src="../dist/img/user2-160x160.jpg" class="img-circle" alt="User Image">
           </div>
           <div class="pull-left info">
-            <p>Alexander Pierce</p>
+            <p class="active-user"></p>
             <a href="#"><i class="fa fa-circle text-success"></i> Online</a>
           </div>
         </div>
@@ -482,6 +488,8 @@
   <!-- <script src="dist/js/demo.js"></script> -->
   <script src="../dist/js/UIcontroller.js"></script>
   <script src="../dist/js/jquery.copyrights.js"></script>
+  <script src="../dist/js/auth.service.js"></script>
+  <script src="../dist/js/app.js"></script>
   <script>
     $('#year').copyrights();
     $('#developer').developer()

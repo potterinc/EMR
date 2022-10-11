@@ -22,6 +22,7 @@ if (isset($_REQUEST['username'])) {
                 $response->privilege = $data['user_privilege'];
                 $response->firstname = $data['user_firstname'];
                 $response->lastname = $data['user_lastname'];
+                $response->dateOfEmployment = $data['d_o_e'];
                 print(json_encode($response, JSON_PRETTY_PRINT));
             } else {
                 $response->status = false;
@@ -63,9 +64,9 @@ if (isset($_REQUEST['firstname']) && isset($_REQUEST['lastname'])) {
     }
 
     $sign_up = "INSERT INTO users (user_firstname,user_lastname,
-    user_username,user_password,user_question,user_answer, user_privilege) 
+    user_username,user_password,user_question,user_answer, user_privilege, d_o_e) 
     VALUES ('$firstname','$lastname','$username','$password',
-    '$security_question','$answer','$privilege')";
+    '$security_question','$answer','$privilege','$date')";
 
     $result = $conn->query($sign_up);
     if ($result == TRUE) {

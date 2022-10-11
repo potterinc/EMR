@@ -23,11 +23,7 @@ var Login = {
     Password: $('#login-password'),
     logout: () => {
         localStorage.clear();
-        location.href = 'index.html';
-    },
-    activeSession: () => {
-        if (localStorage.getItem('loginStatus') == 'true')
-            location.href = 'main.html';
+        location.href = '../index.html';
     },
     signIn: () => {
         $.ajax({
@@ -49,7 +45,8 @@ var Login = {
                     id: asyncRequest.userID,
                     firstName: asyncRequest.firstname,
                     lastName: asyncRequest.lastname,
-                    privilege: asyncRequest.privilege
+                    privilege: asyncRequest.privilege,
+                    dateOfEmployment: asyncRequest.dateOfEmployment
                 }
             },
             complete: () => {
