@@ -17,19 +17,20 @@ if (isset($_REQUEST['username'])) {
             # DECRYPT PASSWORD
             if (password_verify($_REQUEST['password'], $data['user_password'])) {
                 $response->username = $data['user_username'];
-                $response->status = TRUE;
+                $response->status = true;
                 $response->userID = $data['user_id'];
                 $response->privilege = $data['user_privilege'];
                 $response->firstname = $data['user_firstname'];
                 $response->lastname = $data['user_lastname'];
                 print(json_encode($response, JSON_PRETTY_PRINT));
             } else {
+                $response->status = false;
                 $response->error = 'Invalid Username or Password';
                 print(json_encode($response, JSON_PRETTY_PRINT));
             }
         }
     } else {
-        $response->status = FALSE;
+        $response->status = false;
         $response->error = "Username does not exist";
         print(json_encode($response, JSON_PRETTY_PRINT));
     }
@@ -45,6 +46,7 @@ if (isset($_REQUEST['firstname']) && isset($_REQUEST['lastname'])) {
     $security_question = $_REQUEST['securityQuestion'];
     $answer = $_REQUEST['answer'];
     $date_ = $_REQUEST['dateOfRegistration'];
+    $privilege = "Doctor";
 
     if ($firstname == NULL) {
         $response->error = "Firstname is Invalid";
@@ -61,14 +63,14 @@ if (isset($_REQUEST['firstname']) && isset($_REQUEST['lastname'])) {
     }
 
     $sign_up = "INSERT INTO users (user_firstname,user_lastname,
-    user_username,user_password,user_question,user_answer) 
+    user_username,user_password,user_question,user_answer, user_privilege) 
     VALUES ('$firstname','$lastname','$username','$password',
-    '$security_question','$answer')";
+    '$security_question','$answer','$privilege')";
 
     $result = $conn->query($sign_up);
     if ($result == TRUE) {
         $response->status = TRUE;
-        $response->message = "Registration messageful";
+        $response->message = "Registration successful";
     } else {
         $response->status = FALSE;
         $response->error = "Username already exists: Try Again";
@@ -88,7 +90,7 @@ if (isset($_REQUEST['userName']) && isset($_REQUEST['answer'])) {
     $result = $conn->query($verify_user);
     if ($result->num_rows > 0) {
         while ($data = $result->fetch_assoc()) {
-            $response->message = "User verified as: ".$data['user_firstname'];
+            $response->message = "User verified as: " . $data['user_firstname'];
             $response->status = true;
             $response->userID = intval($data['user_id']);
         }
@@ -101,11 +103,23 @@ if (isset($_REQUEST['userName']) && isset($_REQUEST['answer'])) {
 }
 
 # CHANGE PASSWORD
-if (isset($_REQUEST['newPassword'])) {
+if (isset($_REQUEST['newPassword']) && isset($_REQUEST['userId'])) {
     $update_action = "UPDATE users SET user_password='" . password_hash($_REQUEST["newPassword"], PASSWORD_DEFAULT) .
         "' WHERE user_id=" . $_REQUEST["userId"];
     $result = $conn->query($update_action);
     $response->status = true;
     $response->message = 'Pasword changed!';
+    print(json_encode($response));
+}
+
+# INIT
+if (isset($_REQUEST['dbNull'])) {
+    $db = "SELECT * FROM users";
+    $result = $conn->query($db);
+    if ($result->num_rows == 0)
+        $response->dbNull = true;
+    else
+        $response->dbNull = false;
+
     print(json_encode($response));
 }

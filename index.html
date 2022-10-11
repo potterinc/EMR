@@ -43,7 +43,7 @@
 
         <form id="login-form">
           <div class="form-group has-feedback">
-            <input type="text" class="form-control" id="login-username" validateLogin placeholder="Username">
+            <input type="text" class="form-control" id="login-username" validateLogin placeholder="Username" autofocus>
             <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
           </div>
           <div class="form-group has-feedback">
@@ -69,7 +69,7 @@
         <hr />
 
         <a href="pages/reset.html" id="password-reset">I forgot my password</a><br>
-        <a href="pages/register.html" class="text-center">Register a new membership</a>
+        <a href="pages/register.html" id="register" class="text-center" hidden>Register a new membership</a>
 
       </div>
       <!-- /.login-box-body -->
@@ -85,6 +85,7 @@
   <script src="plugins/iCheck/icheck.min.js"></script>
   <script src="dist/js/auth.service.js"></script>
   <script src="dist/js/authenticate.js"></script>
+  <script>Authenticate.init();</script>
   <script>
     $(function () {
       $('input').iCheck({

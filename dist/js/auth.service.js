@@ -21,22 +21,12 @@ function validateInput(inputArgs) {
 var Login = {
     Username: $('#login-username'),
     Password: $('#login-password'),
-    loginSession: () => {
-        if (localStorage.getItem('status') === 'true') {
-            $('.menu-title').html(localStorage.getItem('name'))
-            $('#userID').html(localStorage.getItem('id'))
-            $('#owner').val(localStorage.getItem('name'));
-            $('#owner-phone').val(localStorage.getItem('telephone'))
-        }
-        else
-            location.href = 'index.html';
-    },
     logout: () => {
         localStorage.clear();
         location.href = 'index.html';
     },
     activeSession: () => {
-        if (localStorage.getItem('status') == 'true')
+        if (localStorage.getItem('loginStatus') == 'true')
             location.href = 'main.html';
     },
     signIn: () => {
@@ -45,7 +35,7 @@ var Login = {
             type: Authenticate.type.POST,
             dataType: Authenticate.JSON,
             beforeSend: () => {
-                $('#sign-in-button').html('<label></label>')
+                $('#sign-in-button').html('<label>')
                 $('#sign-in-button label').addClass('loader')
             },
             data: {
@@ -53,15 +43,22 @@ var Login = {
                 password: Login.Password.val(),
             },
             success: (asyncRequest) => {
-                APIResponse.data = asyncRequest;
+                APIResponse = asyncRequest;
+                APIResponse.User = {
+                    username: asyncRequest.username,
+                    id: asyncRequest.userID,
+                    firstName: asyncRequest.firstname,
+                    lastName: asyncRequest.lastname,
+                    privilege: asyncRequest.privilege
+                }
             },
             complete: () => {
                 Login.Username.val(null);
                 Login.Password.val(null);
                 $('#sign-in-button').html('Sign In');
                 if (APIResponse.status) {
-                    localStorage.setItem('User', JSON.stringify(APIResponse.data));
-                    localStorage.setItem('loginStatus', APIResponse.data.status);
+                    localStorage.setItem('User', JSON.stringify(APIResponse.User));
+                    localStorage.setItem('loginStatus', APIResponse.status);
                     location.href = 'pages/main.html';
                 } else {
                     $('#notification').html(APIResponse.error).addClass('label label-warning');
@@ -100,7 +97,7 @@ var SignUp = {
                 dateOfRegistration: SignUp.getToday()
             },
             beforeSend: () => {
-                $('#new-user').html('<label></label>');
+                $('#new-user').html('<label>');
                 $('#new-user label').addClass('loader');
             },
             success: (asyncRequest) => {
@@ -120,7 +117,7 @@ var SignUp = {
                 if (APIResponse.status == true) {
                     $('#notification').html(APIResponse.message).addClass('label label-success');
                     setTimeout(() => {
-                        $('#notification').html('Redirecting...').addClass('label label-success');
+                        $('#notification').html('Redirecting...');
                         $('#notification').fadeOut(1000);
                         $('#notification').val(null).removeClass('label label-success label-success').show();
                         location.href = '../index.html';
@@ -231,14 +228,29 @@ const Authenticate = {
                 }
             }
         })
+    },
+    init: () => {
+        $.ajax({
+            url: 'controller/authenticate.php',
+            type: 'POST',
+            dataType: 'json',
+            data: { dbNull: true },
+            success: (res) => {
+                APIResponse = res;
+            },
+            complete: () => {
+                if (APIResponse.dbNull)
+                    $('#register').show();
+            },
+        })
     }
 }
 
-const APIResponse = {
-    error: undefined,
-    message: undefined,
-    status: Boolean,
-    data: undefined
+var APIResponse = {
+    // error: undefined,
+    // message: undefined,
+    // status: undefined,
+    // data: undefined
 }
 
 // let inputTypPwd = true;
